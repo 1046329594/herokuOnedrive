@@ -387,7 +387,6 @@ function bigfileupload($path)
             $getoldupinfo = json_decode($getoldupinfo_j , true);
             if ( json_decode( curl_request($getoldupinfo['uploadUrl']), true)['@odata.context']!='' ) return output($getoldupinfo_j);
         }
-        if (!$_SERVER['admin']) $filename = spurlencode( $fileinfo['name'] ) . '.scfupload';
         $response=MSAPI('createUploadSession',path_format($path1 . '/' . $filename),'{"item": { "@microsoft.graph.conflictBehavior": "fail"  }}',$_SERVER['access_token']);
         $responsearry = json_decode($response['body'],true);
         if (isset($responsearry['error'])) return output($response['body'], $response['stat']);
