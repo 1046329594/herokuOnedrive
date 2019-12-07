@@ -1,7 +1,7 @@
 <?php
 /*
     帖子 ： https://www.hostloc.com/thread-617698-1-1.html
-    github ： https://github.com/qkqpttgf/herokuOnedrive
+    github ： https://github.com/1046329594/herokuOnedrive
 */
 /*
 APIKey         ：API Key。
@@ -603,7 +603,7 @@ function_name:' . $_SERVER['function_name'] . '<br>
         }
     }
     $html .= '
-        <a href="https://github.com/qkqpttgf/herokuOnedrive">Github</a><br>';
+        <a href="https://github.com/1046329594/herokuOnedrive">Github</a><br>';
     /*if ($needUpdate) {
         $html .= '<pre>' . $_SERVER['github_version'] . '</pre>
         <form action="" method="post">
