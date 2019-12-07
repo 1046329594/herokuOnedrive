@@ -1148,7 +1148,6 @@ function render_list($path, $files)
 
 <link rel="stylesheet" href="//unpkg.zhimg.com/github-markdown-css@3.0.1/github-markdown.css">
 <script type="text/javascript" src="//unpkg.zhimg.com/marked@0.6.2/marked.min.js"></script>
-<?php if (isset($files['folder']) && $_SERVER['is_imgup_path'] && !$_SERVER['admin']) { ?><script type="text/javascript" src="//cdn.bootcss.com/spark-md5/3.0.0/spark-md5.min.js"></script><?php } ?>
 <script type="text/javascript">
     var root = '<?php echo $_SERVER["base_path"]; ?>';
     function path_format(path) {
@@ -1522,19 +1521,8 @@ function render_list($path, $files)
                         reader.readAsArrayBuffer(blob);
                     }
                     readblob(asize);
-<?php if (!$_SERVER['admin']) { ?>
-                    var spark = new SparkMD5.ArrayBuffer();
-<?php } ?>
                     reader.onload = function(e){
                         var binary = this.result;
-<?php if (!$_SERVER['admin']) { ?>
-                        spark.append(binary);
-                        if (asize < newstartsize) {
-                            asize += chunksize;
-                            readblob(asize);
-                            return;
-                        }
-<?php } ?>
                         var xhr = new XMLHttpRequest();
                         xhr.open("PUT", url, true);
                         //xhr.setRequestHeader('x-requested-with','XMLHttpRequest');
@@ -1561,29 +1549,6 @@ function render_list($path, $files)
                                 xhr3.onload = function(e){
                                     console.log(xhr3.responseText+','+xhr3.status);
                                 }
-<?php if (!$_SERVER['admin']) { ?>
-                                var filemd5 = spark.end();
-                                var xhr4 = new XMLHttpRequest();
-                                xhr4.open("GET", '?action=uploaded_rename&filename='+encodeURIComponent(file.name)+'&filemd5='+filemd5);
-                                xhr4.setRequestHeader('x-requested-with','XMLHttpRequest');
-                                xhr4.send(null);
-                                xhr4.onload = function(e){
-                                    console.log(xhr4.responseText+','+xhr4.status);
-                                    var filename;
-                                    if (xhr4.status==200) filename = JSON.parse(xhr4.responseText)['name'];
-                                    if (xhr4.status==409) filename = filemd5 + file.name.substr(file.name.indexOf('.'));
-                                    if (filename=='') {
-                                        alert('<?php echo $constStr['UploadErrorUpAgain'][$constStr['language']]; ?>');
-                                        uploadbuttonshow();
-                                        return;
-                                    }
-                                    var lasturl = location.href;
-                                    if (lasturl.substr(lasturl.length-1)!='/') lasturl += '/';
-                                    lasturl += filename + '?preview';
-                                    //alert(lasturl);
-                                    window.open(lasturl);
-                                }
-<?php } ?>
                                 EndTime=new Date();
                                 MiddleStr = '<?php echo $constStr['EndAt'][$constStr['language']]; ?>:'+EndTime.toLocaleString()+'<br>';
                                 if (newstartsize==0) {
@@ -1591,7 +1556,7 @@ function render_list($path, $files)
                                 } else {
                                     MiddleStr += '<?php echo $constStr['ThisTime'][$constStr['language']].$constStr['AverageSpeed'][$constStr['language']]; ?>:'+size_format((totalsize-newstartsize)*1000/(EndTime.getTime()-StartTime.getTime()))+'/s<br>';
                                 }
-                                document.getElementById('upfile_td1_'+tdnum).innerHTML='<font color="green"><?php if (!$_SERVER['admin']) { ?>'+filemd5+'<br><?php } ?>'+document.getElementById('upfile_td1_'+tdnum).innerHTML+'<br><?php echo $constStr['UploadComplete'][$constStr['language']]; ?></font>';
+                                document.getElementById('upfile_td1_'+tdnum).innerHTML='<font color="green">'+document.getElementById('upfile_td1_'+tdnum).innerHTML+'<br><?php echo $constStr['UploadComplete'][$constStr['language']]; ?></font>';
                                 label.innerHTML=StartStr+MiddleStr;
                                 uploadbuttonshow();
 <?php if ($_SERVER['admin']) { ?>
